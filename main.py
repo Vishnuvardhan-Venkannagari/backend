@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
+import os
 from pareto.operational_water_management.operational_produced_water_optimization_model import (
     WaterQuality,
     create_model,
@@ -224,10 +226,28 @@ def operationalModel():
     parameter_list = ["v_F_Trucked", "v_C_Trucked"]
     fname = "PARETO_report.xlsx"
     [sets_reports, parameters_report] = get_data(fname, set_list, parameter_list)
+    file_path = "PARETO_report.xlsx"
 
+    # Check if the file exists before serving it
+    if not os.path.exists(file_path):
+        return {"error": "Report file not found!"}
+    return FileResponse(
+        path=file_path,
+        filename="PARETO_report.xlsx",
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
 
+@app.get("/download-report", response_class=FileResponse)
+def download_report():
+    """ Endpoint to download the generated report file """
+    file_path = "PARETO_report.xlsx"
 
+    # Check if the file exists before serving it
+    if not os.path.exists(file_path):
+        return {"error": "Report file not found!"}
 
-
-
-    return {"message": "Success"}
+    return FileResponse(
+        path=file_path,
+        filename="PARETO_report.xlsx",
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
