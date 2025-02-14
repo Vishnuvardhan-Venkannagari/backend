@@ -26,7 +26,7 @@ from pareto.utilities.results import (
     is_feasible,
     nostdout,
 )
-from pareto.utilities.visualize import plot_network
+# from pareto.utilities.visualize import plot_network
 from pareto.utilities.solvers import get_solver, set_timeout
 from importlib import resources
 
@@ -121,14 +121,14 @@ def strategicModel():
         "N08": (60, 30),
         "N09": (70, 40),
     }
-    plot_network(
-        strategic_model,
-        show_piping=True,
-        show_trucking=True,
-        show_results=False,
-        save_fig="network.png",
-        pos=pos,
-    )
+    # plot_network(
+    #     strategic_model,
+    #     show_piping=True,
+    #     show_trucking=True,
+    #     show_results=False,
+    #     save_fig="network.png",
+    #     pos=pos,
+    # )
     return {"message": "Success"}
 
 
