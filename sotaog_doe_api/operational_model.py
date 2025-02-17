@@ -124,7 +124,3 @@ async def operational_model():
         filename="PARETO_report.xlsx",
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-
-print("Router Loaded:", __name__)
-print("Router Prefix:", router.prefix)
-print("Routes in Router:", router.routes)

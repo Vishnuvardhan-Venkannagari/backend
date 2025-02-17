@@ -42,17 +42,17 @@ def test():
     return {"message": "Hello from EC2!"}
 
 
-@app.get("/download-report", response_class=FileResponse)
-def download_report():
-    """ Endpoint to download the generated report file """
-    file_path = "PARETO_report.xlsx"
+# @app.get("/download-report", response_class=FileResponse)
+# def download_report():
+#     """ Endpoint to download the generated report file """
+#     file_path = "PARETO_report.xlsx"
 
-    # Check if the file exists before serving it
-    if not os.path.exists(file_path):
-        return {"error": "Report file not found!"}
+#     # Check if the file exists before serving it
+#     if not os.path.exists(file_path):
+#         return {"error": "Report file not found!"}
 
-    return FileResponse(
-        path=file_path,
-        filename="PARETO_report.xlsx",
-        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
+#     return FileResponse(
+#         path=file_path,
+#         filename="PARETO_report.xlsx",
+#         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+#     )
