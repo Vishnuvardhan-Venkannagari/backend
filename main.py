@@ -34,8 +34,14 @@ def onStart():
 
 @app.middleware('http')
 async def authMiddleware(request: fastapi.Request, call_next):
+    auth_user = await authenticate()
+    if auth_user == "Success":
+        return await call_next(request)    
     return await call_next(request)
 
+
+async def authenticate():
+    return "Success"
 
 @app.middleware('http')
 async def contextMiddleware(request: fastapi.Request, call_next):
@@ -71,4 +77,11 @@ def read_root():
 @app.get("/api/test")
 def test():
     return {"message": "Hello from EC2!"}
+
+auth_router = fastapi.APIRouter(prefix="/auth", tags=["Auth"])
+@auth_router.get("/api/me")
+async def me(request: fastapi.Request):
+    return "Success"
+
+app.include_router(auth_router)
 
