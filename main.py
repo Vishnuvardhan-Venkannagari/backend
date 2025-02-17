@@ -59,9 +59,27 @@ def onStart():
     # print("Onstart", package_dir)
     for module_info in pkgutil.iter_modules([str(package_dir)]):
         module = importlib.import_module(f'{module_info.name}')#routers.
+        print(module_info.name)
         # print(hasattr(module, 'router'))
         if hasattr(module, 'router'):
+            print(f'Including router from module: {module_info.name}', module.router)
             app.include_router(module.router, prefix="/api")
+    print("Registered Routes:")
+    for route in app.routes:
+        print(f"Path: {route.path}, Methods: {route.methods}")
+
+
+# def onStart():
+#     for module_info in pkgutil.iter_modules([str(package_dir)]):
+#         module = importlib.import_module(f'{module_info.name}')#routers.
+#         print(module_info.name)
+#         # print(hasattr(module, 'router'))
+#         if hasattr(module, 'router'):
+#             print(f'Including router from module: {module_info.name}', module.router)
+#             app.include_router(module.router, prefix="/api")
+#     print("Registered Routes:")
+#     for route in app.routes:
+#         print(f"Path: {route.path}, Methods: {route.methods}")
 
 @app.get("/")
 def read_root():
