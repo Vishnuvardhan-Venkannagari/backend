@@ -1,6 +1,10 @@
-from fastapi import FastAPI
+import fastapi
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 import os
+import sys
+import pkgutil
+import importlib
 from pareto.operational_water_management.operational_produced_water_optimization_model import (
     WaterQuality,
     create_model,
@@ -34,8 +38,30 @@ from importlib import resources
 
 import pandas as pd
 
-app = FastAPI()
+# app = FastAPI()
+app = fastapi.FastAPI(version='1.0.0',
+                      description=f"RestAPI for SOTAOG-DOE Platform",
+                      openapi_url="/openapi.json",
+                      title="SOTAOG-DOE")
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:4200", "http://localhost:3000"],  # Add other necessary origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Ensure all methods (GET, POST, etc.) are allowed
+    allow_headers=["*"],  # Ensure all headers (including 'authtoken') are allowed
+)
+
+package_dir = os.getcwd() + "/sotaog_doe_api"
+sys.path.append(os.path.abspath(package_dir))
+@app.on_event("startup")
+def onStart():
+    # print("Onstart", package_dir)
+    for module_info in pkgutil.iter_modules([str(package_dir)]):
+        module = importlib.import_module(f'{module_info.name}')#routers.
+        # print(hasattr(module, 'router'))
+        if hasattr(module, 'router'):
+            app.include_router(module.router, prefix="/api")
 @app.get("/")
 def read_root():
     return {"message": "Hello from EC2!"}
