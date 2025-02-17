@@ -18,6 +18,7 @@ from pareto.utilities.results import (
 from pareto.utilities.solvers import get_solver, set_timeout
 from importlib import resources
 import pandas as pd
+import os
 
 router = fastapi.APIRouter(prefix='/pareto',  tags=['Pareto'])
 router.post("/operational-model")
