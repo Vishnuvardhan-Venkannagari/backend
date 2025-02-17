@@ -21,8 +21,9 @@ import pandas as pd
 import os
 
 router = fastapi.APIRouter(prefix='/pareto',  tags=['Pareto'])
-router.post("/operational-model")
+@router.post("/operational-model")
 async def operational_model():
+
     set_list = [
         "ProductionPads",
         "CompletionsPads",
