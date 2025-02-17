@@ -7,10 +7,13 @@ import pkgutil
 import importlib
 import traceback
 
-app = fastapi.FastAPI(version='1.0.0',
+app = fastapi.FastAPI(#version='1.0.0',
+                      title="SOTAOG-DOE",
                       description=f"RestAPI for SOTAOG-DOE Platform",
                       openapi_url="/openapi.json",
-                      title="SOTAOG-DOE")
+                      docs_url="/docs",
+                      redoc_url="/redoc"
+                    )
 
 app.add_middleware(
     CORSMiddleware,
