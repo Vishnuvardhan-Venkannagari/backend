@@ -78,8 +78,8 @@ def read_root():
 def test():
     return {"message": "Hello from EC2!"}
 
-auth_router = fastapi.APIRouter(prefix="/auth", tags=["Auth"])
-@auth_router.get("/api/me")
+auth_router = fastapi.APIRouter(prefix="/api/auth", tags=["Auth"])
+@auth_router.get("/me")
 async def me(request: fastapi.Request):
     return "Success"
 
