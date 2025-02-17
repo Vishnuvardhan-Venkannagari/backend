@@ -5,8 +5,8 @@ import os
 import sys
 import pkgutil
 import importlib
+import traceback
 
-# app = FastAPI()
 app = fastapi.FastAPI(version='1.0.0',
                       description=f"RestAPI for SOTAOG-DOE Platform",
                       openapi_url="/openapi.json",
@@ -32,27 +32,43 @@ def onStart():
             app.include_router(module.router, prefix="/api")
 
 
+@app.middleware('http')
+async def authMiddleware(request: fastapi.Request, call_next):
+    return await call_next(request)
+
+
+@app.middleware('http')
+async def contextMiddleware(request: fastapi.Request, call_next):
+    try:
+        resp = await call_next(request)
+        response_body = b""
+        async for chunk in resp.body_iterator:
+            response_body += chunk
+
+        return fastapi.Response(content=response_body, status_code=resp.status_code, headers=dict(resp.headers))
+
+    except Exception as exe:
+        """
+        Exception error
+        """
+        # errFormat = error
+        errFormat = '''Error: 
+        Stack Trace:
+        %s
+        ''' % (traceback.format_exc())
+        print(errFormat)
+        return fastapi.responses.JSONResponse(
+            status_code=500,
+            content={"detail": "An internal server error occurred.", "error": str(errFormat)}
+        )
+    
+
 @app.get("/")
 def read_root():
     return {"message": "Hello from EC2!"}
 
 
-@app.get("/test")
+@app.get("/api/test")
 def test():
     return {"message": "Hello from EC2!"}
 
-
-# @app.get("/download-report", response_class=FileResponse)
-# def download_report():
-#     """ Endpoint to download the generated report file """
-#     file_path = "PARETO_report.xlsx"
-
-#     # Check if the file exists before serving it
-#     if not os.path.exists(file_path):
-#         return {"error": "Report file not found!"}
-
-#     return FileResponse(
-#         path=file_path,
-#         filename="PARETO_report.xlsx",
-#         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-#     )
